@@ -9,20 +9,23 @@ function Progress() {
     completionPercentage: 0
   });
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     const fetchStats = async () => {
       const token = localStorage.getItem('token');
-      const username = localStorage.getItem('username'); // ✅
+      const username = localStorage.getItem('username');
 
-      const res = await fetch(`http://localhost:2006/tasks/progress/${encodeURIComponent(username)}`, {
+      const res = await fetch(`${BASE_URL}/tasks/progress/${encodeURIComponent(username)}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       const data = await res.json();
       setStats(data);
     };
+
     fetchStats();
-  }, []);
+  }, [BASE_URL]);
 
   const total = stats.completed + stats.pending + stats.notCompleted;
 

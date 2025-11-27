@@ -9,12 +9,15 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setPopup('');
+
     try {
-      const response = await fetch('http://localhost:2006/task/user/login', {
+      const response = await fetch(`${BASE_URL}/task/user/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -22,6 +25,7 @@ function Login() {
 
       let data;
       const contentType = response.headers.get('content-type');
+
       if (contentType && contentType.includes('application/json')) {
         data = await response.json();
       } else {
@@ -30,8 +34,8 @@ function Login() {
       }
 
       if (response.ok) {
-        // ✅ Save username & token
         localStorage.setItem('username', data.username || username);
+
         if (data.token) {
           localStorage.setItem('token', data.token);
         }
@@ -43,6 +47,7 @@ function Login() {
     } catch (error) {
       setPopup('Network error!');
     }
+
     setLoading(false);
   };
 
@@ -51,6 +56,7 @@ function Login() {
       <form className="form-box" onSubmit={handleLogin}>
         {popup && <div className={`form-popup${popup === 'Incorrect credentials' ? ' error' : ''}`}>{popup}</div>}
         <h2 className="form-title">Login</h2>
+
         <input
           className="form-input"
           type="text"
@@ -59,6 +65,7 @@ function Login() {
           required
           onChange={e => setUsername(e.target.value)}
         />
+
         <input
           className="form-input"
           type="password"
@@ -67,9 +74,11 @@ function Login() {
           required
           onChange={e => setPassword(e.target.value)}
         />
+
         <span className="signup-link">
           New user? <span className="signup-link-text" onClick={() => navigate('/signup')}>Signup</span>
         </span>
+
         <button type="submit" className="form-btn" disabled={loading}>
           {loading ? 'Logging in...' : 'Login'}
         </button>

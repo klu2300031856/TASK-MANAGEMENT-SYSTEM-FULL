@@ -12,14 +12,16 @@ function AddTask() {
   const [date, setDate] = useState('');
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   const handleCalendar = () => setShowCalendar(!showCalendar);
 
   const handleSave = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    const username = localStorage.getItem('username'); // ✅ add username
+    const username = localStorage.getItem('username');
 
-    await fetch('http://localhost:2006/tasks/addtask', {
+    await fetch(`${BASE_URL}/tasks/addtask`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -29,9 +31,10 @@ function AddTask() {
         title: task,
         description,
         deadline,
-        username // ✅ send username
+        username
       })
     });
+
     navigate('/tasks');
   };
 

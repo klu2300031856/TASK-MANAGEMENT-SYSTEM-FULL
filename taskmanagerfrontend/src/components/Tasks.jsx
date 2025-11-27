@@ -6,13 +6,15 @@ function Tasks() {
   const [tasks, setTasks] = useState([]);
   const navigate = useNavigate();
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     const fetchTasks = async () => {
       try {
         const token = localStorage.getItem('token');
-        const username = localStorage.getItem('username'); // ✅ username
+        const username = localStorage.getItem('username');
 
-        const res = await fetch(`http://localhost:2006/tasks/view/${encodeURIComponent(username)}`, {
+        const res = await fetch(`${BASE_URL}/tasks/view/${encodeURIComponent(username)}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -23,14 +25,14 @@ function Tasks() {
       }
     };
     fetchTasks();
-  }, []);
+  }, [BASE_URL]);
 
   const handleComplete = async (id, currentStatus) => {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
     const newStatus = currentStatus === "COMPLETED" ? "PENDING" : "COMPLETED";
 
-    const res = await fetch(`http://localhost:2006/tasks/complete/${encodeURIComponent(username)}/${id}`, {
+    const res = await fetch(`${BASE_URL}/tasks/complete/${encodeURIComponent(username)}/${id}`, {
       method: 'PATCH',
       headers: { 
         'Content-Type': 'application/json',
@@ -52,7 +54,7 @@ function Tasks() {
     const token = localStorage.getItem('token');
     const username = localStorage.getItem('username');
 
-    await fetch(`http://localhost:2006/tasks/delete/${encodeURIComponent(username)}/${id}`, {
+    await fetch(`${BASE_URL}/tasks/delete/${encodeURIComponent(username)}/${id}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${token}` }
     });

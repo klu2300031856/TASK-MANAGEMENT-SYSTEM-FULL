@@ -7,6 +7,8 @@ function AdminHome() {
   const navigate = useNavigate();
   const admin = localStorage.getItem('admin');
 
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     if (!admin) {
       navigate('/admin/login');
@@ -15,7 +17,7 @@ function AdminHome() {
 
     const fetchTasks = async () => {
       try {
-        const res = await fetch('http://localhost:2006/task/admin/alltasks');
+        const res = await fetch(`${BASE_URL}/task/admin/alltasks`);
         const data = await res.json();
         setTasks(data || []);
       } catch {
@@ -23,7 +25,7 @@ function AdminHome() {
       }
     };
     fetchTasks();
-  }, [admin, navigate]);
+  }, [admin, navigate, BASE_URL]);
 
   const handleLogout = () => {
     localStorage.removeItem('admin');
